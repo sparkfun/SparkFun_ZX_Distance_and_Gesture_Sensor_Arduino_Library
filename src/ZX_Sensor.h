@@ -52,6 +52,14 @@
 #define DRCFG_FORCE         6
 #define DRCFG_EN            7
 
+/* ZX Sensor UART message headers */
+#define ZX_UART_END         0xFF
+#define ZX_UART_RANGES      0xFE
+#define ZX_UART_X           0xFA
+#define ZX_UART_Z           0xFB
+#define ZX_UART_GESTURE     0xFC
+#define ZX_UART_ID          0xF1
+
 /* Constants */
 #define ZX_ERROR            0xFF
 #define MAX_X               240
@@ -63,10 +71,6 @@ typedef enum GestureType {
     RIGHT_SWIPE = 0x01,
     LEFT_SWIPE = 0x02,
     UP_SWIPE = 0x03,
-    HOVER = 0x05,
-    HOVER_LEFT = 0x06,
-    HOVER_RIGHT = 0x07,
-    HOVER_UP = 0x08,
     NO_GESTURE = 0xFF
 } GestureType;
 

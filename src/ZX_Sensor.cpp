@@ -331,10 +331,6 @@ uint8_t ZX_Sensor::readZ()
  * 0x01 Right Swipe
  * 0x02 Left Swipe
  * 0x03 Up Swipe
- * 0x05 Hover
- * 0x06 Hover-Left
- * 0x07 Hover-Right
- * 0x08 Hover-Up
  *
  * @return a number corresponding to  a gesture. 0xFF on error.
  */
@@ -357,17 +353,26 @@ GestureType ZX_Sensor::readGesture()
             return LEFT_SWIPE;
         case UP_SWIPE:
             return UP_SWIPE;
-        case HOVER:
-            return HOVER;
-        case HOVER_LEFT:
-            return HOVER_LEFT;
-        case HOVER_RIGHT:
-            return HOVER_RIGHT;
-        case HOVER_UP:
-            return HOVER_UP;
         default:
             return NO_GESTURE;
     }
+}
+
+/**
+ * @brief Reads the speed of the last gesture from the sensor
+ *
+ * @return a number corresponding to the speed of the gesture. 0xFF on error.
+ */
+uint8_t ZX_Sensor::readGestureSpeed()
+{
+    uint8_t speed;
+    
+    /* Read GESTURE register and return the value */
+    if ( !wireReadDataByte(ZX_GSPEED, speed) ) {
+        return ZX_ERROR;
+    }
+    
+    return speed;
 }
 
 /*******************************************************************************

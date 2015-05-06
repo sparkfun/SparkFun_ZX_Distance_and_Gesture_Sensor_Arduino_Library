@@ -6,7 +6,10 @@ May 6, 2015
 https://github.com/sparkfun/SparkFun_ZX_Distance_and_Gesture_Sensor_Arduino_Library
 
 Tests the ZX sensor's ability to read ZX data over I2C. This demo
-configures the ZX sensor and periodically polls for gestures.
+configures the ZX sensor and periodically polls for gestures. The
+gesture is displayed along with its "speed" (how long it takes to
+complete the gesture). Note that higher numbers of "speed"
+indicate a slower speed.
 
 Hardware Connections:
  
@@ -40,6 +43,7 @@ const int ZX_ADDR = 0x10;    // ZX Sensor I2C address
 // Global Variables
 ZX_Sensor zx_sensor = ZX_Sensor(ZX_ADDR);
 GestureType gesture;
+uint8_t gesture_speed;
 
 void setup() {
   
@@ -50,6 +54,7 @@ void setup() {
   Serial.println();
   Serial.println("----------------------------------------");
   Serial.println("SparkFun/GestureSense - I2C Gesture Demo");
+  Serial.println("Note: higher 'speed' numbers mean slower");
   Serial.println("----------------------------------------");
   
   // Initialize ZX Sensor (configure I2C and read model ID)
@@ -96,30 +101,22 @@ void loop() {
   // If there is gesture data available, read and print it
   if ( zx_sensor.gestureAvailable() ) {
     gesture = zx_sensor.readGesture();
+    gesture_speed = zx_sensor.readGestureSpeed();
     switch ( gesture ) {
       case NO_GESTURE:
         Serial.println("No Gesture");
         break;
       case RIGHT_SWIPE:
-        Serial.println("Right Swipe");
+        Serial.print("Right Swipe. Speed: ");
+        Serial.println(gesture_speed, DEC);
         break;
       case LEFT_SWIPE:
-        Serial.println("Left Swipe");
+        Serial.print("Left Swipe. Speed: ");
+        Serial.println(gesture_speed, DEC);
         break;
       case UP_SWIPE:
-        Serial.println("Up Swipe");
-        break;
-      case HOVER:
-        Serial.println("Hover");
-        break;
-      case HOVER_LEFT:
-        Serial.println("Hover-Left");
-        break;
-      case HOVER_RIGHT:
-        Serial.println("Hover-Right");
-        break;
-      case HOVER_UP:
-        Serial.println("Hover-Up");
+        Serial.print("Up Swipe. Speed: ");
+        Serial.println(gesture_speed, DEC);
         break;
       default:
         break;

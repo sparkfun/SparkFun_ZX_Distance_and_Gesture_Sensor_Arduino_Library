@@ -20,7 +20,7 @@ Hardware Connections:
  2            DR               Data Ready
 
 Resources:
-Include Wire.h and SFE_ZX_Sensor.h
+Include Wire.h and ZX_Sensor.h
 
 Development environment specifics:
 Written in Arduino 1.6.3
