@@ -1,5 +1,5 @@
 /**
- * @file    SFE_ZX_Sensor.cpp
+ * @file    ZX_Sensor.cpp
  * @brief   Library for the SparkFun/GestureSense ZX Sensor
  * @author  Shawn Hymel (SparkFun Electronics)
  *
@@ -15,16 +15,16 @@
 #include <Arduino.h>
 #include <Wire.h>
 
-#include "SFE_ZX_Sensor.h"
+#include "ZX_Sensor.h"
 
 /*******************************************************************************
  * Initialization
  ******************************************************************************/
 
 /**
- * @brief Constructor - Instantiates SFE_ZX_Sensor object
+ * @brief Constructor - Instantiates ZX_Sensor object
  */
-SFE_ZX_Sensor::SFE_ZX_Sensor(int address)
+ZX_Sensor::ZX_Sensor(int address)
 {
     addr_ = address;
 }
@@ -32,7 +32,7 @@ SFE_ZX_Sensor::SFE_ZX_Sensor(int address)
 /**
  * @brief Destructor
  */
-SFE_ZX_Sensor::~SFE_ZX_Sensor()
+ZX_Sensor::~ZX_Sensor()
 {
 
 }
@@ -43,37 +43,12 @@ SFE_ZX_Sensor::~SFE_ZX_Sensor()
  * @param enable_interrupts enables DR pin to assert on events
  * @return True if initialized successfully. False otherwise.
  */
-bool SFE_ZX_Sensor::init(   InterruptType interrupts /* = NO_INTERRUPTS */,
+bool ZX_Sensor::init(   InterruptType interrupts /* = NO_INTERRUPTS */,
                             bool active_high /* = true */)
 {
-    uint8_t ver;
     
     /* Initialize I2C */
     Wire.begin();
-    
-    /***TEST***/
-    uint8_t val;
-    if ( !wireReadDataByte(ZX_DRCFG, val) ) {
-        return false;
-    }
-    Serial.print("DRCFG: 0x");
-    Serial.println(val, HEX);
-    
-    /* Read Model ID and check against known values for the ZX Sensor */
-    if ( !wireReadDataByte(ZX_MODEL, ver) ) {
-        return false;
-    }
-    if ( ver != ZX_MODEL_VER ) {
-        return false;
-    }
-    
-    /* Read Register Map version and check against known good values */
-    if ( !wireReadDataByte(ZX_REGVER, ver) ) {
-        return false;
-    }
-    if ( ver != ZX_REG_MAP_VER ) {
-        return false;
-    }
     
     /* Enable DR interrupts based on desired interrupts */
     setInterruptTrigger(interrupts);
@@ -84,15 +59,39 @@ bool SFE_ZX_Sensor::init(   InterruptType interrupts /* = NO_INTERRUPTS */,
         enableInterrupts();
     }
     
-    /***TEST***/
-    uint8_t val2;
-    if ( !wireReadDataByte(ZX_DRCFG, val2) ) {
-        return false;
-    }
-    Serial.print("DRCFG: 0x");
-    Serial.println(val, HEX);
-    
     return true;
+}
+
+/**
+ * @brief Reads the sensor model version
+ *
+ * @return sensor model version number
+ */
+uint8_t ZX_Sensor::getModelVersion()
+{
+    uint8_t ver;
+    
+    if ( !wireReadDataByte(ZX_MODEL, ver) ) {
+        return ZX_ERROR;
+    }
+
+    return ver;
+}
+
+/**
+ * @brief Reads the register map version
+ *
+ * @return register map version number
+ */
+uint8_t ZX_Sensor::getRegMapVersion()
+{
+    uint8_t ver;
+    
+    if ( !wireReadDataByte(ZX_REGVER, ver) ) {
+        return ZX_ERROR;
+    }
+    
+    return ver;
 }
 
 /*******************************************************************************
@@ -105,8 +104,14 @@ bool SFE_ZX_Sensor::init(   InterruptType interrupts /* = NO_INTERRUPTS */,
   * @param[in] interrupts which types of interrupts to enable
   * @return True if operation successful. False otherwise.
   */
-bool SFE_ZX_Sensor::setInterruptTrigger(InterruptType interrupts)
+bool ZX_Sensor::setInterruptTrigger(InterruptType interrupts)
 {
+    
+#if DEBUG
+    Serial.print(F("Setting interrupts: "));
+    Serial.println(interrupts);
+#endif
+
     switch ( interrupts ) {
         case POSITION_INTERRUPTS:
             if ( !setRegisterBit(ZX_DRE, DRE_CRD) ) {
@@ -136,6 +141,13 @@ bool SFE_ZX_Sensor::setInterruptTrigger(InterruptType interrupts)
             break;
     }
     
+#if DEBUG
+    uint8_t val;
+    wireReadDataByte(ZX_DRE, val);
+    Serial.print(F("ZX_DRE: b"));
+    Serial.println(val, BIN);
+#endif
+    
     return true;
 }
 
@@ -146,7 +158,7 @@ bool SFE_ZX_Sensor::setInterruptTrigger(InterruptType interrupts)
  * @param[in] pin_pulse true: DR pulse. False: DR pin asserts until STATUS read
  * @return True if operation successful. False otherwise.
  */
-bool SFE_ZX_Sensor::configureInterrupts(    bool active_high, 
+bool ZX_Sensor::configureInterrupts(    bool active_high, 
                                             bool pin_pulse /* = false */)
 {
     /* Set or clear polarity bit to make DR active-high or active-low */
@@ -171,6 +183,13 @@ bool SFE_ZX_Sensor::configureInterrupts(    bool active_high,
         }
     }
     
+#if DEBUG
+    uint8_t val;
+    wireReadDataByte(ZX_DRCFG, val);
+    Serial.print(F("ZX_DRCFG: b"));
+    Serial.println(val, BIN);
+#endif
+    
     return true;
 }
 
@@ -179,7 +198,7 @@ bool SFE_ZX_Sensor::configureInterrupts(    bool active_high,
  *
  * @return True if operation successful. False otherwise.
  */
-bool SFE_ZX_Sensor::enableInterrupts()
+bool ZX_Sensor::enableInterrupts()
 {
     if ( !setRegisterBit(ZX_DRCFG, DRCFG_EN) ) {
         return false;
@@ -193,7 +212,7 @@ bool SFE_ZX_Sensor::enableInterrupts()
  *
  * @return True if operation successful. False otherwise.
  */
-bool SFE_ZX_Sensor::disableInterrupts()
+bool ZX_Sensor::disableInterrupts()
 {
     if ( !clearRegisterBit(ZX_DRCFG, DRCFG_EN) ) {
         return false;
@@ -207,7 +226,7 @@ bool SFE_ZX_Sensor::disableInterrupts()
  *
  * @return True if operation successful. False otherwise.
  */
-bool SFE_ZX_Sensor::clearInterrupt()
+bool ZX_Sensor::clearInterrupt()
 {
     uint8_t val;
     
@@ -227,7 +246,7 @@ bool SFE_ZX_Sensor::clearInterrupt()
   *
   * @return True if data is ready to be read. False otherwise.
   */
-bool SFE_ZX_Sensor::positionAvailable()
+bool ZX_Sensor::positionAvailable()
 {
     uint8_t status;
     
@@ -248,7 +267,7 @@ bool SFE_ZX_Sensor::positionAvailable()
  *
  * @return True if gesture is ready to be read. False otherwise.
  */
-bool SFE_ZX_Sensor::gestureAvailable()
+bool ZX_Sensor::gestureAvailable()
 {
     uint8_t status;
     
@@ -273,7 +292,7 @@ bool SFE_ZX_Sensor::gestureAvailable()
  *
  * @return 0-240 for X position. 0xFF on read error.
  */
-uint8_t SFE_ZX_Sensor::readX()
+uint8_t ZX_Sensor::readX()
 {
     uint8_t x_pos;
     
@@ -292,7 +311,7 @@ uint8_t SFE_ZX_Sensor::readX()
  *
  * @return 0-240 for Z position. 0xFF on read error.
  */
-uint8_t SFE_ZX_Sensor::readZ()
+uint8_t ZX_Sensor::readZ()
 {
     uint8_t z_pos;
     
@@ -319,7 +338,7 @@ uint8_t SFE_ZX_Sensor::readZ()
  *
  * @return a number corresponding to  a gesture. 0xFF on error.
  */
-GestureType SFE_ZX_Sensor::readGesture()
+GestureType ZX_Sensor::readGesture()
 {
     uint8_t gesture;
     
@@ -327,6 +346,10 @@ GestureType SFE_ZX_Sensor::readGesture()
     if ( !wireReadDataByte(ZX_GESTURE, gesture) ) {
         return NO_GESTURE;
     }
+#if DEBUG
+    Serial.print(F("Gesture read: "));
+    Serial.println(gesture);
+#endif
     switch ( gesture ) {
         case RIGHT_SWIPE:
             return RIGHT_SWIPE;
@@ -357,7 +380,7 @@ GestureType SFE_ZX_Sensor::readGesture()
  * @param[in] bit the number of the bit (0-7) to set
  * @return True if successful write operation. False otherwise.
  */
-bool SFE_ZX_Sensor::setRegisterBit(uint8_t reg, uint8_t bit)
+bool ZX_Sensor::setRegisterBit(uint8_t reg, uint8_t bit)
 {
     uint8_t val;
     
@@ -381,7 +404,7 @@ bool SFE_ZX_Sensor::setRegisterBit(uint8_t reg, uint8_t bit)
  * @param[in] bit the number of the bit (0-7) to clear
  * @return True if successful write operation. False otherwise.
  */
-bool SFE_ZX_Sensor::clearRegisterBit(uint8_t reg, uint8_t bit)
+bool ZX_Sensor::clearRegisterBit(uint8_t reg, uint8_t bit)
 {
     uint8_t val;
     
@@ -409,7 +432,7 @@ bool SFE_ZX_Sensor::clearRegisterBit(uint8_t reg, uint8_t bit)
  * @param[in] val the 1-byte value to write to the I2C device
  * @return True if successful write operation. False otherwise.
  */
-bool SFE_ZX_Sensor::wireWriteByte(uint8_t val)
+bool ZX_Sensor::wireWriteByte(uint8_t val)
 {
     Wire.beginTransmission(addr_);
     Wire.write(val);
@@ -427,7 +450,7 @@ bool SFE_ZX_Sensor::wireWriteByte(uint8_t val)
  * @param[in] val the 1-byte value to write to the I2C device
  * @return True if successful write operation. False otherwise.
  */
-bool SFE_ZX_Sensor::wireWriteDataByte(uint8_t reg, uint8_t val)
+bool ZX_Sensor::wireWriteDataByte(uint8_t reg, uint8_t val)
 {
     Wire.beginTransmission(addr_);
     Wire.write(reg);
@@ -446,7 +469,7 @@ bool SFE_ZX_Sensor::wireWriteDataByte(uint8_t reg, uint8_t val)
  * @param[out] the value returned from the register
  * @return True if successful read operation. False otherwise.
  */
-bool SFE_ZX_Sensor::wireReadDataByte(uint8_t reg, uint8_t &val)
+bool ZX_Sensor::wireReadDataByte(uint8_t reg, uint8_t &val)
 {
     
     /* Indicate which register we want to read from */

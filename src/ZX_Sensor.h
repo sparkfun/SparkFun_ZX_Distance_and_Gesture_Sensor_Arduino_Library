@@ -1,5 +1,5 @@
 /**
- * @file    SFE_ZX_Sensor.h
+ * @file    ZX_Sensor.h
  * @brief   Library for the SparkFun/GestureSense ZX Sensor
  * @author  Shawn Hymel (SparkFun Electronics)
  *
@@ -12,19 +12,19 @@
  * functions.
  */
  
-#ifndef SFE_ZX_SENSOR_H
-#define SFE_ZX_SENSOR_H
+#ifndef ZX_SENSOR_H
+#define ZX_SENSOR_H
 
 #include <Arduino.h>
 
 /* Debug */
-#define DEBUG               1
+#define DEBUG               0
 
 /* Acceptable ZX Sensor version */
-#define ZX_MODEL_VER        0x00
+#define ZX_MODEL_VER        0x01
 
 /* Acceptable ZX Sensor register map */
-#define ZX_REG_MAP_VER      0x00
+#define ZX_REG_MAP_VER      0x01
 
 /* ZX Sensor register addresses */
 #define ZX_STATUS           0x00
@@ -79,14 +79,16 @@ typedef enum InterruptType {
 } InterruptType;
 
 /* ZX Sensor Class */
-class SFE_ZX_Sensor {
+class ZX_Sensor {
 public:
 
     /* Initialization */
-    SFE_ZX_Sensor(int address);
-    ~SFE_ZX_Sensor();
-    bool init(  InterruptType interrupts = NO_INTERRUPTS, 
+    ZX_Sensor(int address);
+    ~ZX_Sensor();
+    bool init(InterruptType interrupts = NO_INTERRUPTS, 
                 bool active_high = true);
+    uint8_t getModelVersion();
+    uint8_t getRegMapVersion();
     
     /* Interrupt configuration */
     bool setInterruptTrigger(InterruptType interrupts);
@@ -120,4 +122,4 @@ private:
     int addr_;
 };
 
-#endif
+#endif /* ZX_SENSOR_H */
