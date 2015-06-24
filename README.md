@@ -27,6 +27,11 @@ Products that use this Library
 
 * [ZX Distance and Gesture Sensor](https://www.sparkfun.com/products/12780)- an infrared sensor capable of determining an object's distance from the sensor and its relative position between the IR LEDs
 
+Known Bugs
+----------
+
+* The UART gesture example does not work. A future update of the ZX's firmware is required before this feature will work. The example is kept to show how UART gestures should work in the future.
+
 Version History
 ---------------
 

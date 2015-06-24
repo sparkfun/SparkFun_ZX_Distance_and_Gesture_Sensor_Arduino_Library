@@ -5,6 +5,11 @@ Shawn Hymel @ SparkFun Electronics
 May 6, 2015
 https://github.com/sparkfun/SparkFun_ZX_Distance_and_Gesture_Sensor_Arduino_Library
 
+IMPORTANT: This feature is unsupported in the ZX sensor! This example only
+kind of works. You will see gestures appear, but they will generally be about
+1 gesture behind. A future update of the ZX's firmware is required to enable
+this feature.
+
 Tests the ZX sensor's ability to read gesture data over UART using 
 SoftwareSerial. The ZX_Sensor library is needed for the
 UART constants. As a result, we have to link the Wire library,
