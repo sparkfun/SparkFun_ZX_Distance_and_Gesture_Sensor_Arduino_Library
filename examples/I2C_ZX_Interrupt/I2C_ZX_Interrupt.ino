@@ -7,7 +7,7 @@ https://github.com/sparkfun/SparkFun_ZX_Distance_and_Gesture_Sensor_Arduino_Libr
 
 Tests the ZX sensor's ability to read ZX data over I2C using an
 interrupt pin. This program configures I2C and sets up an
-interrupt to occur whenever the ZX sensor throws its DR pin low.
+interrupt to occur whenever the ZX sensor throws its DR pin high.
 
 Hardware Connections:
  
