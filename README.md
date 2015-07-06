@@ -1,7 +1,7 @@
 SparkFun MicroView Arduino Library
 ========================================
 
-![ZX Distance and Gesture Sensor](***PRODUCT PHOTO LINK***)
+![ZX Distance and Gesture Sensor](https://cdn.sparkfun.com//assets/parts/9/5/8/5/12780-01.jpg)
 
 [*SparkFun ZX Distance and Gesture Sensor (SEN-12780)*](https://www.sparkfun.com/products/12780)
 
@@ -35,15 +35,19 @@ Known Bugs
 Version History
 ---------------
 
-* [TODO](TODO) - Description
+* 1.0.0 - Initial release
 
 License Information
 -------------------
 
-This product is _**open source**_!
+This product is _**open source**_! 
 
-This code is open source so please feel free to do anything you want with it; you buy me a beer if you use this and we meet someday ([Beerware license](http://en.wikipedia.org/wiki/Beerware)).
+Please review the LICENSE.md file for license information. 
+
+If you have any questions or concerns on licensing, please contact techsupport@sparkfun.com.
 
 Distributed as-is; no warranty is given.
 
 - Your friends at SparkFun.
+
+_This is a collaboration with [XYZ Interactive](http://www.gesturesense.com/xyz)_
