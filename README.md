@@ -35,7 +35,8 @@ Known Bugs
 Version History
 ---------------
 
-* 1.0.0 - Initial release
+* [V_1.0.1](https://github.com/sparkfun/SparkFun_ZX_Distance_and_Gesture_Sensor_Arduino_Library/tree/V_1.0.1) - Fixed typo in library properties: "Sensor" to "Sensors"
+* [V_1.0.0](https://github.com/sparkfun/SparkFun_ZX_Distance_and_Gesture_Sensor_Arduino_Library/tree/V_1.0.0) - Initial release
 
 License Information
 -------------------
