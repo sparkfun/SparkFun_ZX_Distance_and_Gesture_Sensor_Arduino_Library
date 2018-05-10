@@ -36,7 +36,7 @@ Product Versions
 ----------------
 * [SEN-13162](https://www.sparkfun.com/products/13162) - ZX Distance and Gesture Sensor
  SMD
-* _[SEN-12780_RETIRED](https://www.sparkfun.com/products/retired/12780) - ZX Distance and Gesture Sensor_
+* _[SEN-12780 (RETIRED)](https://www.sparkfun.com/products/retired/12780) - ZX Distance and Gesture Sensor_
 
 Version History
 ---------------
